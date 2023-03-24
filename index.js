@@ -60,7 +60,18 @@ taskForm.addEventListener('submit', (e)=>{
   const title = taskForm['task-title']
   const description = taskForm['task-description']
 
-  saveTask(title.value, description.value, "UNCHECK")
+  if(taskForm['task-title'].value == "" || taskForm['task-description'].value == ""){
+      alert("El título no puede estar vacio")
+    } else {
+
+      saveTask(title.value, description.value, "UNCHECK")
   taskForm.reset()
+
+    }
+
+  
+  
 })
+
+
 
