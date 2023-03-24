@@ -1,24 +1,50 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo list</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
 </head>
+
 <body>
-    <form id="task-form">
-        <label for="title">Título:</label>
-        <input type="text" placeholder="Título de la tarea" id="task-title">
+    <div class="row m-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="container container2 p4">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="h4">Añadir tarea</h1>
+                        <form id="task-form">
+                            <label for="title">Título:</label>
+                            <input class="form-control mb-3" type="text" placeholder="Título de la tarea"
+                                id="task-title">
+                            <label for="description">Deescripción:</label>
+                            <textarea class="form-control mb-3" id="task-description" rows="3"
+                                placeholder="task-description"></textarea>
+                            <button class="btn btn-primary" id="btn-task-save">Guardar</button>
+                        </form>
 
-        <label for="description">Deescripción:</label>
-        <textarea id="task-description" rows="3" placeholder="task-description"></textarea>
-        <button id="btn-task-save">Guardar</button>
+                    </div>
+                </div>
+            </div>
 
-    </form>
+            <div id="tasks-container" class="container p4"></div>
 
-    <div id="tasks-container"></div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+
+
+
+
+
+
 
     <script type="module" src="./index.js"></script>
 </body>
+
 </html>

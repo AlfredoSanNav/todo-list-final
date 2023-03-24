@@ -10,11 +10,14 @@ window.addEventListener('DOMContentLoaded', async () =>{
     querySnapshot.forEach(doc => { 
     const task = doc.data()
     html += ` 
-    <div>
-        <h3 class="${doc.data().status}">${task.title}</h3>
+    <div class="card card-body mt-2 border-primary">
+        <h3 class="${doc.data().status} h5">${task.title}</h3>
         <p class="${doc.data().status}">${task.description} </p>
-        <button class="btn-delete" data-id="${doc.id}">Delete</button>
-        <button class="btn-complete" data-id="${doc.id}">Terminado</button>
+        <div class="display-flex">
+          <button class="btn btn-primary btn-delete" data-id="${doc.id}">Delete</button>
+          <button class="btn btn-secondary btn-complete" data-id="${doc.id}">Terminado</button>
+        </div>
+        
     </div>
     `;
 
@@ -34,7 +37,6 @@ window.addEventListener('DOMContentLoaded', async () =>{
     btn.addEventListener('click', async (e) =>{
       const doc = await getTask(e.target.dataset.id)
       let status = doc.data().status
-      const newStatus = ""
       if(status == "UNCHECK"){
         status = "CHECK"
       } else {
