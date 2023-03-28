@@ -28,6 +28,7 @@ window.addEventListener('DOMContentLoaded', async () =>{
   let i = 0;
   btnsDelete.forEach(btn =>{
     btn.addEventListener('click', ({target:{dataset}})=>{
+    //queda pendiente checar este boton
     list.splice(i, 1);
     localStorage.setItem("TODO", JSON.stringify(list))
     deleteTask(dataset.id) 
