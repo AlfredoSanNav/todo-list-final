@@ -37,11 +37,13 @@ window.addEventListener('DOMContentLoaded', async () =>{
   tasksContainer.innerHTML= html
   const btnsDelete =  tasksContainer.querySelectorAll('.btn-delete')
   let i = 0;
-  btnsDelete.forEach(btn =>{
-    btn.addEventListener('click', ({target:{dataset}})=>{
-    //queda pendiente checar este boton
+  btnsDelete.forEach((btn) =>{
+    btn.addEventListener('click', async ({target:{dataset}})=>{
     let listDelete = (JSON.parse(localStorage.getItem("TODO")))
-    listDelete.splice(i, 1);
+    const doc = await getTask(dataset.id)
+    
+    const index = listDelete.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
+    listDelete.splice(index, 1);
     localStorage.setItem("TODO", JSON.stringify(listDelete))
     deleteTask(dataset.id) 
     i++
@@ -50,7 +52,6 @@ window.addEventListener('DOMContentLoaded', async () =>{
 
 
   const btnsComplete = tasksContainer.querySelectorAll('.btn-complete')
-  let ii = 0;
   btnsComplete.forEach(btn =>{
     btn.addEventListener('click', async (e) =>{
       const doc = await getTask(e.target.dataset.id)
@@ -62,13 +63,10 @@ window.addEventListener('DOMContentLoaded', async () =>{
       }
       
       let completeList = JSON.parse(localStorage.getItem("TODO"))
-      completeList[ii].status = status
+      const index = completeList.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
+      completeList[index].status = status
       localStorage.setItem("TODO", JSON.stringify(completeList))
-      console.log(doc.id)
       updateTask(doc.id, {status: status})
-      
-      ii++
-
     }) 
   })
 
@@ -76,7 +74,9 @@ window.addEventListener('DOMContentLoaded', async () =>{
   })
 })
 
-let list = []
+if (!localStorage.getItem("TODO")) {
+  localStorage.setItem("TODO", JSON.stringify([]))
+}
 
 taskForm.addEventListener('submit', (e)=>{
   e.preventDefault()

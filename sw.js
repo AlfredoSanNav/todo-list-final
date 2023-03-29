@@ -3,6 +3,8 @@ const CACHE_NAME= 'v1_cache_programador_fitness',
 urlsToCache=[
     './',
     'https://bootswatch.com/5/quartz/bootstrap.min.css',
+    'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js',
+    'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js',
     './style.css',
     './index.html',
     './script.js',
