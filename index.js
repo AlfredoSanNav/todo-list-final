@@ -1,5 +1,16 @@
 import {saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
 
+//Llama al ServiceWorker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+  .then(reg=>console.log('Registro de SW exitoso!', reg))
+  .catch(err=>console.warn('Error al tratar de registrar el SW',
+  err))
+}
+
+//
+
+
 const taskForm  = document.getElementById('task-form')
 const tasksContainer = document.getElementById('tasks-container')
 
@@ -29,8 +40,9 @@ window.addEventListener('DOMContentLoaded', async () =>{
   btnsDelete.forEach(btn =>{
     btn.addEventListener('click', ({target:{dataset}})=>{
     //queda pendiente checar este boton
-    list.splice(i, 1);
-    localStorage.setItem("TODO", JSON.stringify(list))
+    let listDelete = (JSON.parse(localStorage.getItem("TODO")))
+    listDelete.splice(i, 1);
+    localStorage.setItem("TODO", JSON.stringify(listDelete))
     deleteTask(dataset.id) 
     i++
     })
@@ -56,6 +68,7 @@ window.addEventListener('DOMContentLoaded', async () =>{
       updateTask(doc.id, {status: status})
       
       ii++
+
     }) 
   })
 
@@ -80,7 +93,7 @@ taskForm.addEventListener('submit', (e)=>{
 
         let addList = JSON.parse(localStorage.getItem("TODO"))
 
-        add.push({
+        addList.push({
           title: title.value,
           description: description.value,
           status: "UNCHECK"
