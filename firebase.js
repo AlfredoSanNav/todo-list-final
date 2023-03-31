@@ -20,8 +20,8 @@
   const app = initializeApp(firebaseConfig);
 
 const db = getFirestore()
-export  const saveTask = (title, description, status) => {
-    addDoc(collection(db, 'tasks'),{title, description, status })
+export  const saveTask = (title, description, status, email) => {
+    addDoc(collection(db, 'tasks'),{title, description, status, email })
     console.log("Guardada en firestore")
   };
 

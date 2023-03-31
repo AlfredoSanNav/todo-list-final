@@ -2,7 +2,8 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signO
 import {  } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"
 const googleButton = document.querySelector('#googleLogin')
 
-const auth = getAuth()
+export const auth = getAuth()
+
 // Autentifica con google
 googleButton.addEventListener('click', async () =>{
     
@@ -15,13 +16,9 @@ googleButton.addEventListener('click', async () =>{
         console.log(error)
     }
 })
-
 // Verifica si hay una sesión iniciada
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
-
-console.log(loggedInLinks)
-console.log(loggedOutLinks)
 
 onAuthStateChanged(auth, async (user) =>{
    

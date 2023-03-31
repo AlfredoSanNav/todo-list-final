@@ -1,7 +1,7 @@
 import { saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
 
 import './googleLogin.js'
-
+import { auth } from './googleLogin.js'
 //Llama al ServiceWorker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
@@ -23,17 +23,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     let html = ''
     querySnapshot.forEach(doc => {
       const task = doc.data()
-      html += ` 
-    <div class="card card-body mt-2 border-primary">
-        <h3 class="${doc.data().status} h5">${task.title}</h3>
-        <p class="${doc.data().status}">${task.description} </p>
-        <div class="display-flex">
-          <button class="btn btn-primary btn-delete" data-id="${doc.id}">Delete</button>
-          <button class="btn btn-secondary btn-complete" data-id="${doc.id}">Terminado</button>
-        </div>
-        
-    </div>
-    `;
+      if(task.email == auth.currentUser.email){
+          html += ` 
+      <div class="card card-body mt-2 border-primary">
+          <h3 class="${doc.data().status} h5">${task.title}</h3>
+          <p class="${doc.data().status}">${task.description} </p>
+          <div class="display-flex">
+            <button class="btn btn-primary btn-delete" data-id="${doc.id}">Delete</button>
+            <button class="btn btn-secondary btn-complete" data-id="${doc.id}">Terminado</button>
+          </div>
+          
+      </div>
+      `;
+      }     
 
     });
 
@@ -96,16 +98,19 @@ descriptionTextarea.addEventListener('keydown', (event) => {
     // Llamar al método submit() del formulario
     event.preventDefault()
     const title = taskForm['task-title']
-  const description = taskForm['task-description']
+   const description = taskForm['task-description']
+   const userEmail = auth.currentUser.email;
+   console.log(userEmail)
 
-  saveTask(title.value, description.value, "UNCHECK")
+  saveTask(title.value, description.value, "UNCHECK", userEmail)
 
   let addList = JSON.parse(localStorage.getItem("TODO"))
 
   addList.push({
     title: title.value,
     description: description.value,
-    status: "UNCHECK"
+    status: "UNCHECK",
+    email: userEmail
   })
 
   localStorage.setItem("TODO", JSON.stringify(addList))
@@ -121,15 +126,17 @@ taskForm.addEventListener('submit', (e) => {
   e.preventDefault()
   const title = taskForm['task-title']
   const description = taskForm['task-description']
+  const userEmail = auth.currentUser.email;
 
-  saveTask(title.value, description.value, "UNCHECK")
+  saveTask(title.value, description.value, "UNCHECK", userEmail)
 
   let addList = JSON.parse(localStorage.getItem("TODO"))
 
   addList.push({
     title: title.value,
     description: description.value,
-    status: "UNCHECK"
+    status: "UNCHECK",
+    email: userEmail
   })
 
   localStorage.setItem("TODO", JSON.stringify(addList))
@@ -137,6 +144,3 @@ taskForm.addEventListener('submit', (e) => {
   titleInput.focus()
 
 })
-
-
-
