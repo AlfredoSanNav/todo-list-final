@@ -1,26 +1,29 @@
-import {saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
+import { saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
+
+import './googleLogin.js'
 
 //Llama al ServiceWorker
-if('serviceWorker' in navigator){
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
-  .then(reg=>console.log('Registro de SW exitoso!', reg))
-  .catch(err=>console.warn('Error al tratar de registrar el SW',
-  err))
+    .then(reg => console.log('Registro de SW exitoso!', reg))
+    .catch(err => console.warn('Error al tratar de registrar el SW',
+      err))
 }
 
-//
-
-
-const taskForm  = document.getElementById('task-form')
+// Objetos
+const taskForm = document.getElementById('task-form')
 const tasksContainer = document.getElementById('tasks-container')
+const titleInput = document.getElementById('task-title');
+const descriptionTextarea = document.getElementById('task-description')
 
-window.addEventListener('DOMContentLoaded', async () =>{
-  
-  onGetTasks((querySnapshot)=>{
+//Carga la lista de tareas
+window.addEventListener('DOMContentLoaded', async () => {
+
+  onGetTasks((querySnapshot) => {
     let html = ''
-    querySnapshot.forEach(doc => { 
-    const task = doc.data()
-    html += ` 
+    querySnapshot.forEach(doc => {
+      const task = doc.data()
+      html += ` 
     <div class="card card-body mt-2 border-primary">
         <h3 class="${doc.data().status} h5">${task.title}</h3>
         <p class="${doc.data().status}">${task.description} </p>
@@ -32,79 +35,107 @@ window.addEventListener('DOMContentLoaded', async () =>{
     </div>
     `;
 
-  });
+    });
 
-  tasksContainer.innerHTML= html
-  const btnsDelete =  tasksContainer.querySelectorAll('.btn-delete')
-  let i = 0;
-  btnsDelete.forEach((btn) =>{
-    btn.addEventListener('click', async ({target:{dataset}})=>{
-    let listDelete = (JSON.parse(localStorage.getItem("TODO")))
-    const doc = await getTask(dataset.id)
-    
-    const index = listDelete.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
-    listDelete.splice(index, 1);
-    localStorage.setItem("TODO", JSON.stringify(listDelete))
-    deleteTask(dataset.id) 
-    i++
+    tasksContainer.innerHTML = html
+
+    //Botón para eliminar
+    const btnsDelete = tasksContainer.querySelectorAll('.btn-delete')
+    let i = 0;
+    btnsDelete.forEach((btn) => {
+      btn.addEventListener('click', async ({ target: { dataset } }) => {
+        let listDelete = (JSON.parse(localStorage.getItem("TODO")))
+        const doc = await getTask(dataset.id)
+
+        const index = listDelete.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
+        listDelete.splice(index, 1);
+        localStorage.setItem("TODO", JSON.stringify(listDelete))
+        deleteTask(dataset.id)
+        i++
+      })
     })
-  })
 
+    //Botón para marcar completado
+    const btnsComplete = tasksContainer.querySelectorAll('.btn-complete')
+    btnsComplete.forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const doc = await getTask(e.target.dataset.id)
+        let status = doc.data().status
+        if (status == "UNCHECK") {
+          status = "CHECK"
+        } else {
+          status = "UNCHECK"
+        }
 
-  const btnsComplete = tasksContainer.querySelectorAll('.btn-complete')
-  btnsComplete.forEach(btn =>{
-    btn.addEventListener('click', async (e) =>{
-      const doc = await getTask(e.target.dataset.id)
-      let status = doc.data().status
-      if(status == "UNCHECK"){
-        status = "CHECK"
-      } else {
-        status = "UNCHECK"
-      }
-      
-      let completeList = JSON.parse(localStorage.getItem("TODO"))
-      const index = completeList.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
-      completeList[index].status = status
-      localStorage.setItem("TODO", JSON.stringify(completeList))
-      updateTask(doc.id, {status: status})
-    }) 
-  })
+        let completeList = JSON.parse(localStorage.getItem("TODO"))
+        const index = completeList.findIndex((item) => item.title === doc.data().title && item.description === doc.data().description)
+        completeList[index].status = status
+        localStorage.setItem("TODO", JSON.stringify(completeList))
+        updateTask(doc.id, { status: status })
+      })
+    })
 
 
   })
 })
 
+//Revisa si está vacío el localstorage y crea uno nuevo
 if (!localStorage.getItem("TODO")) {
   localStorage.setItem("TODO", JSON.stringify([]))
 }
 
-taskForm.addEventListener('submit', (e)=>{
+titleInput.addEventListener('keydown', (event) =>{
+  if(event.keyCode === 13){
+    descriptionTextarea.focus()
+  }
+})
+
+descriptionTextarea.addEventListener('keydown', (event) => {
+  // Verificar si la tecla presionada es "Enter"
+  if (event.keyCode === 13) {
+    // Llamar al método submit() del formulario
+    event.preventDefault()
+    const title = taskForm['task-title']
+  const description = taskForm['task-description']
+
+  saveTask(title.value, description.value, "UNCHECK")
+
+  let addList = JSON.parse(localStorage.getItem("TODO"))
+
+  addList.push({
+    title: title.value,
+    description: description.value,
+    status: "UNCHECK"
+  })
+
+  localStorage.setItem("TODO", JSON.stringify(addList))
+  taskForm.reset()
+  titleInput.focus()
+  
+  }
+});
+
+
+//Agrega las tareas
+taskForm.addEventListener('submit', (e) => {
   e.preventDefault()
   const title = taskForm['task-title']
   const description = taskForm['task-description']
 
-  if(taskForm['task-title'].value == "" || taskForm['task-description'].value == ""){
-      alert("El título no puede estar vacio")
-    } else {
-      saveTask(title.value, description.value, "UNCHECK")
-      
+  saveTask(title.value, description.value, "UNCHECK")
 
-        //Localstorage
+  let addList = JSON.parse(localStorage.getItem("TODO"))
 
-        let addList = JSON.parse(localStorage.getItem("TODO"))
+  addList.push({
+    title: title.value,
+    description: description.value,
+    status: "UNCHECK"
+  })
 
-        addList.push({
-          title: title.value,
-          description: description.value,
-          status: "UNCHECK"
-        })
+  localStorage.setItem("TODO", JSON.stringify(addList))
+  taskForm.reset()
+  titleInput.focus()
 
-      localStorage.setItem("TODO", JSON.stringify(addList))
-      taskForm.reset()
-    }
-
-  
-  
 })
 
 

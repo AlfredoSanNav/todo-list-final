@@ -9,11 +9,9 @@
     <meta name="theme-color" content="#F0DB4F">
     <meta name="MobileOptimized" content="widht">
     <meta name="HandheldFriendly" content="true">
-    <meta name="apple-mobile-web-app-capable"> 
-    <meta name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent">
-    <link rel="shortcut icon" type="image/png"
-    href="img/logo.png">
+    <meta name="apple-mobile-web-app-capable">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="shortcut icon" type="image/png" href="img/logo.png">
     <link rel="apple-touch-icon" href="img/logo.png">
     <link rel="apple-touch-startup-image" href="img/logo.png">
     <link rel="manifest" href="./manifest.json">
@@ -23,9 +21,16 @@
 </head>
 
 <body>
-    <div class="row m-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <button id="googleLogin" type="button" class="btn btn-primary logged-out">Iniciar sesión</button>
+            <button id="logout" type="button" class="btn btn-secondary logged-in">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="row m-3 logged-in">
+        <div class="col-xl-3"></div>
+        <div class="col-xl-6">
             <div class="container container2 p4">
                 <div class="card">
                     <div class="card-body">
@@ -47,7 +52,7 @@
             <div id="tasks-container" class="container p4"></div>
 
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-xl-3"></div>
     </div>
 
 

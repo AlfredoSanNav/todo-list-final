@@ -2,3 +2,7 @@
     text-decoration: line-through;
     color : #00ffd5;
 }
+
+body{
+    overflow-x: hidden;
+}
