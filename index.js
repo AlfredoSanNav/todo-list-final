@@ -98,24 +98,29 @@ descriptionTextarea.addEventListener('keydown', (event) => {
     // Llamar al método submit() del formulario
     event.preventDefault()
     const title = taskForm['task-title']
-   const description = taskForm['task-description']
-   const userEmail = auth.currentUser.email;
-   console.log(userEmail)
-
-  saveTask(title.value, description.value, "UNCHECK", userEmail)
-
-  let addList = JSON.parse(localStorage.getItem("TODO"))
-
-  addList.push({
-    title: title.value,
-    description: description.value,
-    status: "UNCHECK",
-    email: userEmail
-  })
-
-  localStorage.setItem("TODO", JSON.stringify(addList))
-  taskForm.reset()
-  titleInput.focus()
+    const description = taskForm['task-description']
+    
+    if(title.value != "" && description.value != ""){
+      const userEmail = auth.currentUser.email;
+  
+      saveTask(title.value, description.value, "UNCHECK", userEmail)
+  
+      let addList = JSON.parse(localStorage.getItem("TODO"))
+  
+      addList.push({
+        title: title.value,
+        description: description.value,
+        status: "UNCHECK",
+        email: userEmail
+      })
+  
+      localStorage.setItem("TODO", JSON.stringify(addList))
+      taskForm.reset()
+      titleInput.focus()
+    } else {
+      alert("Los campos no pueden estar vacios")
+      titleInput.focus()
+    }
   
   }
 });
@@ -126,21 +131,28 @@ taskForm.addEventListener('submit', (e) => {
   e.preventDefault()
   const title = taskForm['task-title']
   const description = taskForm['task-description']
-  const userEmail = auth.currentUser.email;
+  
+  if(title.value != "" && description.value != ""){
+    const userEmail = auth.currentUser.email;
 
-  saveTask(title.value, description.value, "UNCHECK", userEmail)
+    saveTask(title.value, description.value, "UNCHECK", userEmail)
 
-  let addList = JSON.parse(localStorage.getItem("TODO"))
+    let addList = JSON.parse(localStorage.getItem("TODO"))
 
-  addList.push({
-    title: title.value,
-    description: description.value,
-    status: "UNCHECK",
-    email: userEmail
-  })
+    addList.push({
+      title: title.value,
+      description: description.value,
+      status: "UNCHECK",
+      email: userEmail
+    })
 
-  localStorage.setItem("TODO", JSON.stringify(addList))
-  taskForm.reset()
-  titleInput.focus()
+    localStorage.setItem("TODO", JSON.stringify(addList))
+    taskForm.reset()
+    titleInput.focus()
+  } else {
+    alert("Los campos no pueden estar vacios")
+    titleInput.focus()
+  }
+  
 
 })
