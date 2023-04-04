@@ -19,15 +19,19 @@ googleButton.addEventListener('click', async () =>{
 // Verifica si hay una sesión iniciada
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
+const parr = document.getElementById('parr')
 
 onAuthStateChanged(auth, async (user) =>{
    
     if(user){
         loggedOutLinks.forEach(link => link.style.display = 'none')
         loggedInLinks.forEach(link => link.style.display = 'flex')
+        parr.style.display = 'none'
+
     } else{
         loggedOutLinks.forEach(link => link.style.display = 'flex')
         loggedInLinks.forEach(link => link.style.display = 'none')
+        parr.style.display = ''
     }
 
 })
