@@ -1,6 +1,6 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-  import {  getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js"
+  import {  getFirestore, collection, addDoc, getDocs, onSnapshot, deleteDoc, doc, getDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js"
 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
@@ -17,11 +17,11 @@
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 const db = getFirestore()
 export  const saveTask = (title, description, status, email) => {
-    addDoc(collection(db, 'tasks'),{title, description, status, email })
+    addDoc(collection(db, 'tasks'),{title, description, status, email})
     console.log("Guardada en firestore")
   };
 

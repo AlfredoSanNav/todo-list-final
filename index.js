@@ -1,7 +1,8 @@
-import { saveTask, getTasks, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
+import { saveTask, onGetTasks, deleteTask, getTask, updateTask } from './firebase.js'
 
 import './googleLogin.js'
 import { auth } from './googleLogin.js'
+import { app } from './firebase.js'
 //Llama al ServiceWorker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
@@ -20,11 +21,13 @@ const descriptionTextarea = document.getElementById('task-description')
 window.addEventListener('DOMContentLoaded', async () => {
 
   onGetTasks((querySnapshot) => {
-    let html = ''
+
+    tasksContainer.innerHTML = '';
+
     querySnapshot.forEach(doc => {
       const task = doc.data()
       if(task.email == auth.currentUser.email){
-          html += ` 
+        tasksContainer.innerHTML  += ` 
       <div class="card card-body mt-2 border-primary">
           <h3 class="${doc.data().status} h5">${task.title}</h3>
           <p class="${doc.data().status}">${task.description} </p>
@@ -39,7 +42,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     });
 
-    tasksContainer.innerHTML = html
+    
 
     //Botón para eliminar
     const btnsDelete = tasksContainer.querySelectorAll('.btn-delete')
@@ -62,6 +65,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     btnsComplete.forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const doc = await getTask(e.target.dataset.id)
+        console.log(doc.data())
         let status = doc.data().status
         if (status == "UNCHECK") {
           status = "CHECK"
@@ -102,7 +106,7 @@ descriptionTextarea.addEventListener('keydown', (event) => {
     
     if(title.value != "" && description.value != ""){
       const userEmail = auth.currentUser.email;
-  
+      console.log()
       saveTask(title.value, description.value, "UNCHECK", userEmail)
   
       let addList = JSON.parse(localStorage.getItem("TODO"))
@@ -134,7 +138,7 @@ taskForm.addEventListener('submit', (e) => {
   
   if(title.value != "" && description.value != ""){
     const userEmail = auth.currentUser.email;
-
+    var timestamp = firebase.firestore.Timestamp.fromDate(new Date())
     saveTask(title.value, description.value, "UNCHECK", userEmail)
 
     let addList = JSON.parse(localStorage.getItem("TODO"))
@@ -156,3 +160,5 @@ taskForm.addEventListener('submit', (e) => {
   
 
 })
+
+
