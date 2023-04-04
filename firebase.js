@@ -17,7 +17,7 @@
   };
 
   // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 const db = getFirestore()
 export  const saveTask = (title, description, status, email) => {

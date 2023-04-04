@@ -2,7 +2,7 @@ import { saveTask, onGetTasks, deleteTask, getTask, updateTask } from './firebas
 
 import './googleLogin.js'
 import { auth } from './googleLogin.js'
-import { app } from './firebase.js'
+
 //Llama al ServiceWorker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
@@ -160,5 +160,6 @@ taskForm.addEventListener('submit', (e) => {
   
 
 })
+localStorage.clear()
 
 
